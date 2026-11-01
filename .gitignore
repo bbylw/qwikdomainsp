@@ -1,0 +1,27 @@
+# Qwik / Vite build output
+node_modules/
+dist/
+server/
+.tmp/
+.qwik/
+.vite/
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Logs & local env
+npm-debug.log*
+yarn-error.log*
+.env
+.env.local
+.DS_Store
+
+# Perch workspace internals
+.perch/
+
+# OS / editor noise
+Thumbs.db
+desktop.ini
+*.swp
+
+# Logs
+*.log
