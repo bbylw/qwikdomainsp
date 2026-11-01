@@ -82,19 +82,6 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router
 └── bun.lock                              # Bun lockfile
 ```
 
-## 🚀 Getting Started
-
-This project uses **Bun** end to end — no npm lockfile, no `npm run`, and Vite itself runs on the Bun runtime (`bun --bun`), so Node is not required locally.
-
-```bash
-bun install      # install dependencies (writes bun.lock)
-bun run dev      # http://localhost:5173 — dev server with HMR
-bun run build    # type-check + client build + static SSG into dist/
-bun run preview  # serve the built output locally
-```
-
-`bun run build` produces a fully static site in `dist/` (`index.html`, `domains/index.html`, hashed JS in `dist/build/`, `sitemap.xml`). CI runs `bun install --frozen-lockfile && bun run build`.
-
 ## 🗂 Categories
 
 | Category | ID | Cards |
@@ -110,29 +97,49 @@ The 实用工具 grid contains one internal card (`"internal": true`) that links
 
 ## 🚀 Deployment
 
-`.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages on every push to `main` (Pages source: **GitHub Actions**).
+`bun run build` emits plain static files in `dist/` (`index.html`, `domains/index.html`, hashed JS under `dist/build/`, `sitemap.xml`), so any static host works. All five options below are free for a public or personal site — pick one.
 
-### Custom domain
+Two build-time variables decide the URLs inside the output:
 
-The site is served from **https://qwikdp.ndjp.net/** — a Pages custom domain, so it lives at the root and the build needs no base path:
+- `PUBLIC_SITE_ORIGIN` — public origin used for canonical URLs, Open Graph tags and `sitemap.xml` (for example `https://qwikdp.ndjp.net`)
+- `PUBLIC_BASE_PATH` — only for sub-path hosting such as `/<repo>/`; leave it unset when the site is served from a domain root
 
-- `PUBLIC_SITE_ORIGIN=https://qwikdp.ndjp.net` — SSG origin for canonical URLs, Open Graph tags and `sitemap.xml`
-- `public/CNAME` carries the same domain into the published artifact
+### GitHub Pages — what this repo uses (https://qwikdp.ndjp.net)
 
-DNS for `qwikdp.ndjp.net` already resolves to GitHub Pages; the domain is stored in the Pages settings and GitHub provisions and enforces HTTPS for it.
+1. **Settings → Pages → Source: GitHub Actions** — the workflow `.github/workflows/deploy.yml` is already in the repo
+2. Every push to `main` runs `bun install --frozen-lockfile && bun run build` and publishes `dist/`
+3. **Settings → Pages → Custom domain** attaches a domain; GitHub issues and enforces HTTPS for it
+4. The workflow's `PUBLIC_SITE_ORIGIN` env var feeds the canonical/OG/sitemap URLs; add `PUBLIC_BASE_PATH` only if you host under a sub-path
 
-### Deploying as a project site instead
+### Cloudflare Pages
 
-Drop the custom domain and give the build a sub-path instead:
+1. Dashboard → **Workers & Pages → Create → Pages → Connect to Git**, pick this repo
+2. Framework preset **None**, build command `bun install && bun run build`, output directory `dist`
+3. Environment variables: `PUBLIC_SITE_ORIGIN=https://<project>.pages.dev`, plus `BUN_VERSION` if you want to pin Bun
+4. Deploy, then **Custom domains** attaches your own domain (TLS is automatic)
 
-- `PUBLIC_BASE_PATH=/<repo>/` — Vite `base` + Qwik Router `basePathname`; rewrites asset, favicon and internal-link URLs
-- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io`
+### Netlify
 
-Both are only needed for `https://<owner>.github.io/<repo>/`; the SSG always writes the site to `dist/`, which is what the workflow uploads.
+1. **Add new site → Import an existing project**, connect GitHub
+2. Build command `bun install && bun run build`, publish directory `dist`
+3. **Site configuration → Environment variables**, add `PUBLIC_SITE_ORIGIN`
+4. **Domain management** attaches the domain; HTTPS is automatic
 
-### Any other static host
+### Vercel
 
-Run `bun run build` and publish `dist/`. On Cloudflare Pages: build command `bun run build`, output directory `dist` (install command `bun install`).
+1. **Add New → Project**, import the repo
+2. Framework preset **Other**; Install Command `bun install`, Build Command `bun run build`, Output Directory `dist`
+3. **Settings → Environment Variables**, add `PUBLIC_SITE_ORIGIN`
+4. **Settings → Domains** attaches the domain (Hobby plan is free for non-commercial use)
+
+### Render
+
+1. **New → Static Site**, connect this repo
+2. Build command `bun install && bun run build`, publish directory `dist`
+3. **Environment → Environment Variables**, add `PUBLIC_SITE_ORIGIN`
+4. **Settings → Custom Domains** attaches the domain
+
+Free-tier limits change over time — check the platform's current pricing page before relying on a quota.
 
 ## 🛠 Customization
 
@@ -278,19 +285,6 @@ This project is open-source and available under the MIT License.
 └── bun.lock                              # Bun 锁文件
 ```
 
-## 🚀 本地运行
-
-本项目全流程使用 **Bun** —— 不再有 npm 锁文件，也不使用 `npm run`；Vite 本身运行在 Bun 运行时上（`bun --bun`），本地无需安装 Node。
-
-```bash
-bun install      # 安装依赖（生成 bun.lock）
-bun run dev      # http://localhost:5173 —— 带 HMR 的开发服务器
-bun run build    # 类型检查 + 客户端构建 + 静态站点生成到 dist/
-bun run preview  # 本地预览构建产物
-```
-
-`bun run build` 会在 `dist/` 生成完整静态站点（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`）。CI 执行 `bun install --frozen-lockfile && bun run build`。
-
 ## 🗂 分类一览
 
 | 分类 | ID | 卡片数 |
@@ -306,29 +300,49 @@ bun run preview  # 本地预览构建产物
 
 ## 🚀 部署选项
 
-`.github/workflows/deploy.yml` 会在每次推送到 `main` 时构建并发布到 GitHub Pages（Pages 来源：**GitHub Actions**）。
+`bun run build` 产出的是纯静态文件（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`），所以任何静态托管都能用。下面五个平台对公开站点或个人站点都免费，任选其一。
 
-### 自定义域名
+构建时有两个变量决定产物里的 URL：
 
-站点通过 GitHub Pages 自定义域名 **https://qwikdp.ndjp.net/** 提供服务，位于根路径，因此构建不需要 base path：
+- `PUBLIC_SITE_ORIGIN` —— 站点对外 origin，用于 canonical、Open Graph 与 `sitemap.xml`（例如 `https://qwikdp.ndjp.net`）
+- `PUBLIC_BASE_PATH` —— 仅在子路径托管（如 `/<repo>/`）时需要；域名根路径托管请留空
 
-- `PUBLIC_SITE_ORIGIN=https://qwikdp.ndjp.net` —— SSG origin，用于 canonical、Open Graph 与 `sitemap.xml`
-- `public/CNAME` 把同一域名带进发布产物
+### GitHub Pages —— 本仓库当前使用（https://qwikdp.ndjp.net）
 
-`qwikdp.ndjp.net` 的 DNS 已解析到 GitHub Pages；域名保存在 Pages 设置中，HTTPS 由 GitHub 自动签发并强制启用。
+1. **Settings → Pages → Source 选择 GitHub Actions** —— 工作流 `.github/workflows/deploy.yml` 已随仓库提供
+2. 每次推送到 `main` 会执行 `bun install --frozen-lockfile && bun run build` 并发布 `dist/`
+3. **Settings → Pages → Custom domain** 绑定自有域名，GitHub 自动签发并强制 HTTPS
+4. 工作流里的 `PUBLIC_SITE_ORIGIN` 决定 canonical / OG / sitemap 里的域名；只有子路径托管才需要加 `PUBLIC_BASE_PATH`
 
-### 改为项目站点部署
+### Cloudflare Pages
 
-去掉自定义域名，改用子路径：
+1. 控制台 → **Workers & Pages → Create → Pages → Connect to Git**，选择本仓库
+2. 框架预设选 **None**，构建命令 `bun install && bun run build`，输出目录 `dist`
+3. 环境变量：`PUBLIC_SITE_ORIGIN=https://<项目>.pages.dev`；如需固定 Bun 版本再加 `BUN_VERSION`
+4. 部署后在 **Custom domains** 绑定自己的域名（TLS 自动签发）
 
-- `PUBLIC_BASE_PATH=/<repo>/` —— 同时作用于 Vite `base` 与 Qwik Router `basePathname`，改写资源、图标与站内链接的 URL
-- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io`
+### Netlify
 
-两者仅在 `https://<owner>.github.io/<repo>/` 这种项目站点下需要；SSG 始终输出到 `dist/`，也就是工作流上传的目录。
+1. **Add new site → Import an existing project**，连接 GitHub
+2. 构建命令 `bun install && bun run build`，发布目录 `dist`
+3. **Site configuration → Environment variables** 添加 `PUBLIC_SITE_ORIGIN`
+4. **Domain management** 绑定域名，HTTPS 自动启用
 
-### 其他静态托管
+### Vercel
 
-执行 `bun run build` 后发布 `dist/` 即可。Cloudflare Pages 请填构建命令 `bun run build`、输出目录 `dist`（安装命令 `bun install`）。
+1. **Add New → Project** 导入本仓库
+2. 框架预设 **Other**；Install Command `bun install`、Build Command `bun run build`、Output Directory `dist`
+3. **Settings → Environment Variables** 添加 `PUBLIC_SITE_ORIGIN`
+4. **Settings → Domains** 绑定域名（Hobby 计划非商业用途免费）
+
+### Render
+
+1. **New → Static Site** 连接本仓库
+2. 构建命令 `bun install && bun run build`，发布目录 `dist`
+3. **Environment → Environment Variables** 添加 `PUBLIC_SITE_ORIGIN`
+4. **Settings → Custom Domains** 绑定域名
+
+各平台免费额度会调整，依赖具体配额前请以官方定价页为准。
 
 ## 🛠 自定义设置
 
