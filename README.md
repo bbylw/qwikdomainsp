@@ -24,7 +24,8 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router
 - Qwik `2.0.0-rc.4` (`@qwik.dev/core`) — component model, signals, lazily-loaded event handlers (`onClick$`)
 - Qwik Router `2.0.0-rc.4` (`@qwik.dev/router`) — file-based routing, `DocumentHead`, static site generation
 - Vite `8` (Rolldown) — dev server & bundler
-- TypeScript `7` — strict mode, `~/*` path alias
+- Bun — package manager, lockfile (`bun.lock`) and script runner
+- TypeScript `7` — strict mode, `~/*` path alias (resolved natively by Vite 8)
 - `@qwik.dev/router/adapters/ssg` — SSG adapter, emits a fully static `dist/`
 
 ## 🌟 Features
@@ -75,21 +76,24 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router
 ├── .github/workflows/deploy.yml          # GitHub Pages CI (build + deploy)
 ├── adapters/static/vite.config.ts        # SSG adapter (static output in dist/)
 ├── public/favicon.svg                    # Site icon
-├── vite.config.ts                        # Vite + Qwik City + Qwik optimizer
+├── vite.config.ts                        # Vite 8 + Qwik Router + Qwik optimizer
 ├── tsconfig.json
-└── package.json
+├── package.json
+└── bun.lock                              # Bun lockfile
 ```
 
 ## 🚀 Getting Started
 
+This project uses **Bun** — no npm lockfile, no `npm run`.
+
 ```bash
-npm install      # install dependencies
-npm run dev      # http://localhost:5173 — dev server with HMR
-npm run build    # type-check + client build + static SSG into dist/
-npm run preview  # serve the built output locally
+bun install      # install dependencies (writes bun.lock)
+bun run dev      # http://localhost:5173 — dev server with HMR
+bun run build    # type-check + client build + static SSG into dist/
+bun run preview  # serve the built output locally
 ```
 
-`npm run build` produces a fully static site in `dist/` (`index.html`, `domains/index.html`, hashed JS in `dist/build/`, `sitemap.xml`).
+`bun run build` produces a fully static site in `dist/` (`index.html`, `domains/index.html`, hashed JS in `dist/build/`, `sitemap.xml`). CI runs `bun install --frozen-lockfile && bun run build`.
 
 ## 🗂 Categories
 
@@ -117,7 +121,7 @@ Both are derived from the repository in the workflow, so a repo rename needs no 
 
 ### Any other static host
 
-Run `npm run build` and publish `dist/`. On Cloudflare Pages: build command `npm run build`, output directory `dist`.
+Run `bun run build` and publish `dist/`. On Cloudflare Pages: build command `bun run build`, output directory `dist` (install command `bun install`).
 
 ### Custom Domain
 
@@ -211,7 +215,8 @@ This project is open-source and available under the MIT License.
 - Qwik `2.0.0-rc.4`（`@qwik.dev/core`）—— 组件模型、signal 状态、按需懒加载的事件处理器（`onClick$`）
 - Qwik Router `2.0.0-rc.4`（`@qwik.dev/router`）—— 约定式路由、`DocumentHead` 头部管理、静态站点生成
 - Vite `8`（Rolldown）—— 开发服务器与打包器
-- TypeScript `7` —— strict 模式，`~/*` 路径别名
+- Bun —— 包管理器、锁文件（`bun.lock`）与脚本运行器
+- TypeScript `7` —— strict 模式，`~/*` 路径别名（由 Vite 8 原生解析）
 - `@qwik.dev/router/adapters/ssg` —— SSG 适配器，输出纯静态 `dist/`
 
 ## 🌟 功能特点
@@ -262,21 +267,24 @@ This project is open-source and available under the MIT License.
 ├── .github/workflows/deploy.yml          # GitHub Pages CI（构建 + 部署）
 ├── adapters/static/vite.config.ts        # SSG 适配器（静态输出到 dist/）
 ├── public/favicon.svg                    # 站点图标
-├── vite.config.ts                        # Vite + Qwik City + Qwik 编译器
+├── vite.config.ts                        # Vite 8 + Qwik Router + Qwik 编译器
 ├── tsconfig.json
-└── package.json
+├── package.json
+└── bun.lock                              # Bun 锁文件
 ```
 
 ## 🚀 本地运行
 
+本项目使用 **Bun** —— 不再有 npm 锁文件，也不使用 `npm run`。
+
 ```bash
-npm install      # 安装依赖
-npm run dev      # http://localhost:5173 —— 带 HMR 的开发服务器
-npm run build    # 类型检查 + 客户端构建 + 静态站点生成到 dist/
-npm run preview  # 本地预览构建产物
+bun install      # 安装依赖（生成 bun.lock）
+bun run dev      # http://localhost:5173 —— 带 HMR 的开发服务器
+bun run build    # 类型检查 + 客户端构建 + 静态站点生成到 dist/
+bun run preview  # 本地预览构建产物
 ```
 
-`npm run build` 会在 `dist/` 生成完整静态站点（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`）。
+`bun run build` 会在 `dist/` 生成完整静态站点（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`）。CI 执行 `bun install --frozen-lockfile && bun run build`。
 
 ## 🗂 分类一览
 
@@ -304,7 +312,7 @@ GitHub Pages 的*项目站点*地址形如 `https://<owner>.github.io/<repo>/`�
 
 ### 其他静态托管
 
-执行 `npm run build` 后发布 `dist/` 即可。Cloudflare Pages 请填构建命令 `npm run build`、输出目录 `dist`。
+执行 `bun run build` 后发布 `dist/` 即可。Cloudflare Pages 请填构建命令 `bun run build`、输出目录 `dist`（安装命令 `bun install`）。
 
 ### 自定义域名设置
 
