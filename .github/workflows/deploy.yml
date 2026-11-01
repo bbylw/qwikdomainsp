@@ -34,7 +34,9 @@ jobs:
           # Project sites are served from https://<owner>.github.io/<repo>/
           # (set PUBLIC_BASE_PATH to "/" if you attach a custom domain)
           PUBLIC_BASE_PATH: /${{ github.event.repository.name }}/
-          PUBLIC_SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
+          # Repo variable PAGES_ORIGIN overrides this when the account serves Pages
+          # from a custom domain instead of <owner>.github.io
+          PUBLIC_SITE_ORIGIN: ${{ vars.PAGES_ORIGIN || format('https://{0}.github.io', github.repository_owner) }}
 
       - uses: actions/configure-pages@v5
         with:
