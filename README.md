@@ -110,24 +110,29 @@ The 实用工具 grid contains one internal card (`"internal": true`) that links
 
 ## 🚀 Deployment
 
-`.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages on every push to `main`. Enable it once under **Settings → Pages → Source: GitHub Actions**.
+`.github/workflows/deploy.yml` builds the site and publishes it to GitHub Pages on every push to `main` (Pages source: **GitHub Actions**).
 
-A GitHub Pages *project* site is served from `https://<owner>.github.io/<repo>/`, so the build takes two env vars:
+### Custom domain
 
-- `PUBLIC_BASE_PATH=/<repo>/` — Vite `base` + Qwik City `basePathname`; rewrites asset, favicon and internal-link URLs
-- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io` — SSG origin for canonical URLs, Open Graph tags and `sitemap.xml`
+The site is served from **https://qwikdp.ndjp.net/** — a Pages custom domain, so it lives at the root and the build needs no base path:
 
-Both are derived from the repository in the workflow, so a repo rename needs no code change. The base path only rewrites URLs — the SSG always writes the site to `dist/`, which is what the workflow uploads.
+- `PUBLIC_SITE_ORIGIN=https://qwikdp.ndjp.net` — SSG origin for canonical URLs, Open Graph tags and `sitemap.xml`
+- `public/CNAME` carries the same domain into the published artifact
+
+DNS for `qwikdp.ndjp.net` already resolves to GitHub Pages; the domain is stored in the Pages settings and GitHub provisions and enforces HTTPS for it.
+
+### Deploying as a project site instead
+
+Drop the custom domain and give the build a sub-path instead:
+
+- `PUBLIC_BASE_PATH=/<repo>/` — Vite `base` + Qwik Router `basePathname`; rewrites asset, favicon and internal-link URLs
+- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io`
+
+Both are only needed for `https://<owner>.github.io/<repo>/`; the SSG always writes the site to `dist/`, which is what the workflow uploads.
 
 ### Any other static host
 
 Run `bun run build` and publish `dist/`. On Cloudflare Pages: build command `bun run build`, output directory `dist` (install command `bun install`).
-
-### Custom Domain
-
-1. Point the domain's DNS at your host and add it as the Pages custom domain
-2. Drop the base path: set `PUBLIC_BASE_PATH: /` in the workflow (or remove it) and rebuild
-3. Match the origin so canonical/OG URLs stay correct: `PUBLIC_SITE_ORIGIN: https://your.domain` (the local fallback lives in `src/constants.ts`)
 
 ## 🛠 Customization
 
@@ -301,24 +306,29 @@ bun run preview  # 本地预览构建产物
 
 ## 🚀 部署选项
 
-`.github/workflows/deploy.yml` 会在每次推送到 `main` 时构建并发布到 GitHub Pages。首次使用请在 **Settings → Pages → Source** 中选择 **GitHub Actions**。
+`.github/workflows/deploy.yml` 会在每次推送到 `main` 时构建并发布到 GitHub Pages（Pages 来源：**GitHub Actions**）。
 
-GitHub Pages 的*项目站点*地址形如 `https://<owner>.github.io/<repo>/`，因此构建需要两个环境变量：
+### 自定义域名
 
-- `PUBLIC_BASE_PATH=/<repo>/` —— 同时作用于 Vite `base` 与 Qwik City `basePathname`，改写资源、图标与站内链接的 URL
-- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io` —— SSG origin，用于 canonical、Open Graph 与 `sitemap.xml`
+站点通过 GitHub Pages 自定义域名 **https://qwikdp.ndjp.net/** 提供服务，位于根路径，因此构建不需要 base path：
 
-两者都由工作流从仓库信息推导，仓库改名无需改代码。base path 只改写 URL —— SSG 始终输出到 `dist/`，也就是工作流上传的目录。
+- `PUBLIC_SITE_ORIGIN=https://qwikdp.ndjp.net` —— SSG origin，用于 canonical、Open Graph 与 `sitemap.xml`
+- `public/CNAME` 把同一域名带进发布产物
+
+`qwikdp.ndjp.net` 的 DNS 已解析到 GitHub Pages；域名保存在 Pages 设置中，HTTPS 由 GitHub 自动签发并强制启用。
+
+### 改为项目站点部署
+
+去掉自定义域名，改用子路径：
+
+- `PUBLIC_BASE_PATH=/<repo>/` —— 同时作用于 Vite `base` 与 Qwik Router `basePathname`，改写资源、图标与站内链接的 URL
+- `PUBLIC_SITE_ORIGIN=https://<owner>.github.io`
+
+两者仅在 `https://<owner>.github.io/<repo>/` 这种项目站点下需要；SSG 始终输出到 `dist/`，也就是工作流上传的目录。
 
 ### 其他静态托管
 
 执行 `bun run build` 后发布 `dist/` 即可。Cloudflare Pages 请填构建命令 `bun run build`、输出目录 `dist`（安装命令 `bun install`）。
-
-### 自定义域名设置
-
-1. 将域名 DNS 指向托管平台，并在 Pages 中绑定该域名
-2. 去掉 base path：在工作流中设置 `PUBLIC_BASE_PATH: /`（或删除该变量）后重新构建
-3. 同步 origin 以保持 canonical / OG 链接正确：`PUBLIC_SITE_ORIGIN: https://your.domain`（本地兜底值在 `src/constants.ts`）
 
 ## 🛠 自定义设置
 

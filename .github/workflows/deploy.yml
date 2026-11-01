@@ -30,12 +30,9 @@ jobs:
       - name: Build static site (Qwik Router SSG)
         run: bun run build
         env:
-          # Project sites are served from https://<owner>.github.io/<repo>/
-          # (set PUBLIC_BASE_PATH to "/" if you attach a custom domain)
-          PUBLIC_BASE_PATH: /${{ github.event.repository.name }}/
-          # Repo variable PAGES_ORIGIN overrides this when the account serves Pages
-          # from a custom domain instead of <owner>.github.io
-          PUBLIC_SITE_ORIGIN: ${{ vars.PAGES_ORIGIN || format('https://{0}.github.io', github.repository_owner) }}
+          # Served from the custom domain at the root, so no base path is set.
+          # Deploying as a project site instead? Add `PUBLIC_BASE_PATH: /<repo>/`.
+          PUBLIC_SITE_ORIGIN: https://qwikdp.ndjp.net
 
       - uses: actions/configure-pages@v6
         with:

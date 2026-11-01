@@ -2,7 +2,7 @@
 export const SITE_NAME = "WebNav Hub";
 
 /**
- * Fallback deployment origin used for static generation (sitemap, canonical URLs).
+ * Deployment origin used for static generation (canonical URLs, Open Graph, sitemap).
  * CI overrides it with `PUBLIC_SITE_ORIGIN`.
  */
-export const SITE_URL = "https://bbylw.github.io";
+export const SITE_URL = "https://qwikdp.ndjp.net";
