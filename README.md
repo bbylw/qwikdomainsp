@@ -24,7 +24,7 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router
 - Qwik `2.0.0-rc.4` (`@qwik.dev/core`) — component model, signals, lazily-loaded event handlers (`onClick$`)
 - Qwik Router `2.0.0-rc.4` (`@qwik.dev/router`) — file-based routing, `DocumentHead`, static site generation
 - Vite `8` (Rolldown) — dev server & bundler
-- Bun — package manager, lockfile (`bun.lock`) and script runner
+- Bun — package manager, lockfile (`bun.lock`), script runner, and the runtime Vite/Qwik execute on (`bun --bun`): no Node needed locally
 - TypeScript `7` — strict mode, `~/*` path alias (resolved natively by Vite 8)
 - `@qwik.dev/router/adapters/ssg` — SSG adapter, emits a fully static `dist/`
 
@@ -84,7 +84,7 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router
 
 ## 🚀 Getting Started
 
-This project uses **Bun** — no npm lockfile, no `npm run`.
+This project uses **Bun** end to end — no npm lockfile, no `npm run`, and Vite itself runs on the Bun runtime (`bun --bun`), so Node is not required locally.
 
 ```bash
 bun install      # install dependencies (writes bun.lock)
@@ -215,7 +215,7 @@ This project is open-source and available under the MIT License.
 - Qwik `2.0.0-rc.4`（`@qwik.dev/core`）—— 组件模型、signal 状态、按需懒加载的事件处理器（`onClick$`）
 - Qwik Router `2.0.0-rc.4`（`@qwik.dev/router`）—— 约定式路由、`DocumentHead` 头部管理、静态站点生成
 - Vite `8`（Rolldown）—— 开发服务器与打包器
-- Bun —— 包管理器、锁文件（`bun.lock`）与脚本运行器
+- Bun —— 包管理器、锁文件（`bun.lock`）、脚本运行器，同时也是 Vite/Qwik 的运行环境（`bun --bun`），本地无需安装 Node
 - TypeScript `7` —— strict 模式，`~/*` 路径别名（由 Vite 8 原生解析）
 - `@qwik.dev/router/adapters/ssg` —— SSG 适配器，输出纯静态 `dist/`
 
@@ -275,7 +275,7 @@ This project is open-source and available under the MIT License.
 
 ## 🚀 本地运行
 
-本项目使用 **Bun** —— 不再有 npm 锁文件，也不使用 `npm run`。
+本项目全流程使用 **Bun** —— 不再有 npm 锁文件，也不使用 `npm run`；Vite 本身运行在 Bun 运行时上（`bun --bun`），本地无需安装 Node。
 
 ```bash
 bun install      # 安装依赖（生成 bun.lock）
