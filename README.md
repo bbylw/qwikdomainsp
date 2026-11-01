@@ -19,13 +19,13 @@ This project's UI design and color scheme is directly inspired by Pornhub's icon
 
 ## 🧱 Tech Stack
 
-The site is built with **[Qwik](https://github.com/QwikDev/qwik) + Qwik City** (latest stable release, `1.20.3`), the resumable framework: pages are server-rendered and then *resumed* on the client instead of hydrated, so the only JavaScript shipped is the code for interactions that actually exist (the category nav).
+The site is built with **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router** (latest release, `2.0.0-rc.4`), the resumable framework: pages are server-rendered and then *resumed* on the client instead of hydrated, so the only JavaScript shipped is the code for interactions that actually exist (the category nav).
 
-- Qwik `1.20.3` — component model, `useSignal` state, lazily-loaded event handlers (`onClick$`)
-- Qwik City `1.20.3` — file-based routing, `<head>` management (`DocumentHead`), static site generation
-- Vite `7` — dev server & bundler
-- TypeScript `5.9` — strict mode, `~/*` path alias
-- `@builder.io/qwik-city/adapters/static` — SSG adapter, emits a fully static `dist/`
+- Qwik `2.0.0-rc.4` (`@qwik.dev/core`) — component model, signals, lazily-loaded event handlers (`onClick$`)
+- Qwik Router `2.0.0-rc.4` (`@qwik.dev/router`) — file-based routing, `DocumentHead`, static site generation
+- Vite `8` (Rolldown) — dev server & bundler
+- TypeScript `7` — strict mode, `~/*` path alias
+- `@qwik.dev/router/adapters/ssg` — SSG adapter, emits a fully static `dist/`
 
 ## 🌟 Features
 
@@ -57,7 +57,7 @@ The site is built with **[Qwik](https://github.com/QwikDev/qwik) + Qwik City** (
 
 ```
 ├── src/
-│   ├── root.tsx                          # QwikCityProvider, global styles, <head>
+│   ├── root.tsx                          # useQwikRouter(), global styles, <head>
 │   ├── entry.dev.tsx                     # dev entry (client render)
 │   ├── entry.ssr.tsx                     # SSR entry (shared by middleware + SSG)
 │   ├── entry.preview.tsx                 # preview server entry
@@ -89,7 +89,7 @@ npm run build    # type-check + client build + static SSG into dist/
 npm run preview  # serve the built output locally
 ```
 
-`npm run build` produces a fully static site in `dist/` (`index.html`, `domains/index.html`, hashed JS in `dist/build/`, `sitemap.xml`, `404.html`).
+`npm run build` produces a fully static site in `dist/` (`index.html`, `domains/index.html`, hashed JS in `dist/build/`, `sitemap.xml`).
 
 ## 🗂 Categories
 
@@ -113,11 +113,11 @@ A GitHub Pages *project* site is served from `https://<owner>.github.io/<repo>/`
 - `PUBLIC_BASE_PATH=/<repo>/` — Vite `base` + Qwik City `basePathname`; rewrites asset, favicon and internal-link URLs
 - `PUBLIC_SITE_ORIGIN=https://<owner>.github.io` — SSG origin for canonical URLs, Open Graph tags and `sitemap.xml`
 
-Both are derived from the repository in the workflow, so a repo rename needs no code change. With a base path the SSG writes the whole site to `dist/<repo>/`, which is exactly the directory the workflow uploads.
+Both are derived from the repository in the workflow, so a repo rename needs no code change. The base path only rewrites URLs — the SSG always writes the site to `dist/`, which is what the workflow uploads.
 
 ### Any other static host
 
-Run `npm run build` and publish the output directory — `dist/`, or `dist/<repo>/` when a base path is set. On Cloudflare Pages: build command `npm run build`, output directory `dist`.
+Run `npm run build` and publish `dist/`. On Cloudflare Pages: build command `npm run build`, output directory `dist`.
 
 ### Custom Domain
 
@@ -206,13 +206,13 @@ This project is open-source and available under the MIT License.
 
 ## 🧱 技术栈
 
-本项目已迁移到 **[Qwik](https://github.com/QwikDev/qwik) + Qwik City**（最新稳定版 `1.20.3`）这一“可恢复（resumable）”框架：页面先在服务端渲染，随后在客户端被**恢复**而非重新水合（hydration），因此浏览器只加载真实交互（分类导航）所需的代码。
+本项目使用 **[Qwik](https://github.com/QwikDev/qwik) 2 + Qwik Router**（最新版本 `2.0.0-rc.4`）这一“可恢复（resumable）”框架：页面先在服务端渲染，随后在客户端被**恢复**而非重新水合（hydration），因此浏览器只加载真实交互（分类导航）所需的代码。
 
-- Qwik `1.20.3` —— 组件模型、`useSignal` 状态、按需懒加载的事件处理器（`onClick$`）
-- Qwik City `1.20.3` —— 约定式路由、`DocumentHead` 头部管理、静态站点生成
-- Vite `7` —— 开发服务器与打包器
-- TypeScript `5.9` —— strict 模式，`~/*` 路径别名
-- `@builder.io/qwik-city/adapters/static` —— SSG 适配器，输出纯静态 `dist/`
+- Qwik `2.0.0-rc.4`（`@qwik.dev/core`）—— 组件模型、signal 状态、按需懒加载的事件处理器（`onClick$`）
+- Qwik Router `2.0.0-rc.4`（`@qwik.dev/router`）—— 约定式路由、`DocumentHead` 头部管理、静态站点生成
+- Vite `8`（Rolldown）—— 开发服务器与打包器
+- TypeScript `7` —— strict 模式，`~/*` 路径别名
+- `@qwik.dev/router/adapters/ssg` —— SSG 适配器，输出纯静态 `dist/`
 
 ## 🌟 功能特点
 
@@ -244,7 +244,7 @@ This project is open-source and available under the MIT License.
 
 ```
 ├── src/
-│   ├── root.tsx                          # QwikCityProvider、全局样式、<head>
+│   ├── root.tsx                          # useQwikRouter()、全局样式、<head>
 │   ├── entry.dev.tsx                     # 开发入口（客户端渲染）
 │   ├── entry.ssr.tsx                     # SSR 入口（中间件与 SSG 共用）
 │   ├── entry.preview.tsx                 # 预览服务器入口
@@ -276,7 +276,7 @@ npm run build    # 类型检查 + 客户端构建 + 静态站点生成到 dist/
 npm run preview  # 本地预览构建产物
 ```
 
-`npm run build` 会在 `dist/` 生成完整静态站点（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`、`404.html`）。
+`npm run build` 会在 `dist/` 生成完整静态站点（`index.html`、`domains/index.html`、`dist/build/` 下的哈希化 JS、`sitemap.xml`）。
 
 ## 🗂 分类一览
 
@@ -300,11 +300,11 @@ GitHub Pages 的*项目站点*地址形如 `https://<owner>.github.io/<repo>/`�
 - `PUBLIC_BASE_PATH=/<repo>/` —— 同时作用于 Vite `base` 与 Qwik City `basePathname`，改写资源、图标与站内链接的 URL
 - `PUBLIC_SITE_ORIGIN=https://<owner>.github.io` —— SSG origin，用于 canonical、Open Graph 与 `sitemap.xml`
 
-两者都由工作流从仓库信息推导，仓库改名无需改代码。启用 base path 后，SSG 会把整站输出到 `dist/<repo>/`，正是工作流上传的目录。
+两者都由工作流从仓库信息推导，仓库改名无需改代码。base path 只改写 URL —— SSG 始终输出到 `dist/`，也就是工作流上传的目录。
 
 ### 其他静态托管
 
-执行 `npm run build` 后发布输出目录即可 —— 无 base path 时为 `dist/`，有 base path 时为 `dist/<repo>/`。Cloudflare Pages 请填构建命令 `npm run build`、输出目录 `dist`。
+执行 `npm run build` 后发布 `dist/` 即可。Cloudflare Pages 请填构建命令 `npm run build`、输出目录 `dist`。
 
 ### 自定义域名设置
 

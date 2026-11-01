@@ -44,8 +44,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          # With a base path, the SSG nests the whole site under dist/<repo>/
-          path: dist/${{ github.event.repository.name }}
+          path: dist
 
   deploy:
     needs: build

@@ -1,5 +1,5 @@
-import { component$, Slot, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import { component$, Slot, useSignal, useVisibleTask$ } from "@qwik.dev/core";
+import { useLocation } from "@qwik.dev/router";
 import { SITE_NAME } from "~/constants";
 
 export default component$(() => {

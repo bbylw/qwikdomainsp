@@ -1,5 +1,5 @@
-import { staticAdapter } from "@builder.io/qwik-city/adapters/static/vite";
-import { extendConfig } from "@builder.io/qwik-city/vite";
+import { ssgAdapter } from "@qwik.dev/router/adapters/ssg/vite";
+import { extendConfig } from "@qwik.dev/router/vite";
 import baseConfig from "../../vite.config";
 import { SITE_URL } from "../../src/constants";
 
@@ -8,11 +8,11 @@ export default extendConfig(baseConfig, () => {
     build: {
       ssr: true,
       rollupOptions: {
-        input: ["@qwik-city-plan"],
+        input: ["@qwik-router-config"],
       },
     },
     plugins: [
-      staticAdapter({
+      ssgAdapter({
         // CI passes the real deployment origin; SITE_URL is the local fallback.
         origin: process.env.PUBLIC_SITE_ORIGIN || SITE_URL,
       }),

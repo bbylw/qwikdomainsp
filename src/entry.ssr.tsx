@@ -1,13 +1,13 @@
-import { renderToStream, type RenderToStreamOptions } from "@builder.io/qwik/server";
-import { manifest } from "@qwik-client-manifest";
+import { getClientManifest } from "@qwik.dev/core";
+import { renderToStream, type RenderToStreamOptions } from "@qwik.dev/core/server";
 import Root from "./root";
 
 /**
- * SSR entry point used by the Qwik City middleware and the static adapter.
+ * SSR entry point used by the Qwik Router middleware and the SSG adapter.
  */
 export default function (opts: RenderToStreamOptions) {
   return renderToStream(<Root />, {
-    manifest,
+    manifest: getClientManifest(),
     ...opts,
     containerAttributes: {
       lang: "zh-CN",

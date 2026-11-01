@@ -1,13 +1,14 @@
-import { component$, useStyles$ } from "@builder.io/qwik";
-import { QwikCityProvider, RouterOutlet } from "@builder.io/qwik-city";
+import { component$, useStyles$ } from "@qwik.dev/core";
+import { RouterOutlet, useQwikRouter } from "@qwik.dev/router";
 import { RouterHead } from "./components/router-head/router-head";
 import globalStyles from "./global.css?inline";
 
 export default component$(() => {
+  useQwikRouter();
   useStyles$(globalStyles);
 
   return (
-    <QwikCityProvider>
+    <>
       <head>
         <meta charset="utf-8" />
         <RouterHead />
@@ -15,6 +16,6 @@ export default component$(() => {
       <body lang="zh-CN">
         <RouterOutlet />
       </body>
-    </QwikCityProvider>
+    </>
   );
 });
